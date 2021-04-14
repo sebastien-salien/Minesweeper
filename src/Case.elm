@@ -1,13 +1,6 @@
-module Case exposing (Case, getValue, getcoordinate,isMine)
-import Browser.Events exposing (Visibility)
-type alias Case =
-    {   
-        y : Int,
-        x : Int,
-        value : Int,
-        isMine: Bool,
-        visibility: Bool
-    }
+module Case exposing (getValue, getcoordinate,isMine)
+import Browser.Events exposing (..)
+import Types exposing (..)
 
 
 getcoordinate :Case -> (Int, Int)

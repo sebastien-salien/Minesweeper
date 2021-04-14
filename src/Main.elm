@@ -3,33 +3,15 @@ module Main exposing (..)
 import Browser
 import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
-import Mine
-
+import Types exposing (..)
+import Minefield exposing(..)
 
 type alias Model =
-    {}
-
-
-exampleGenerateRandomMines : Cmd Msg
-exampleGenerateRandomMines =
-    Mine.generateRandomMines
-        { width = 100
-        , height = 100
-        , minMines = 10
-        , maxMines = 30
-        , initialX = 0
-        , initialY = 0
-        }
-        MinesGenerated
-
+    {battle_field : List Int}
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, exampleGenerateRandomMines)
-
-
-type Msg
-    = MinesGenerated (List ( Int, Int ))
+    ( {battle_field = init_battleField}, mine_field)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
