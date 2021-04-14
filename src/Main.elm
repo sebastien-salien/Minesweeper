@@ -25,7 +25,7 @@ exampleGenerateRandomMines =
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( {}, exampleGenerateRandomMines)
 
 
 type Msg

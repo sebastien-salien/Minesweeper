@@ -1,10 +1,12 @@
 module Case exposing (Case, getValue, getcoordinate,isMine)
+import Browser.Events exposing (Visibility)
 type alias Case =
     {   
         y : Int,
         x : Int,
         value : Int,
-        isMine: Bool
+        isMine: Bool,
+        visibility: Bool
     }
 
 
