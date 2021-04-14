@@ -1,2 +1,2 @@
 # Minesweeper
-#le projet a pour but de crer un minesweeper pour notre matiere en langage informatique elm
+#le projet a pour but de creer un minesweeper pour notre matiere en langage informatique elm
