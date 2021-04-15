@@ -22,4 +22,4 @@ mine_field = Mine.generateRandomMines
  
 init_battleField : Array2D Case
 init_battleField = 
-        Array2D.fromList (createCaseList 10)
+        Array2D.fromList (createCaseList options.height options.width)

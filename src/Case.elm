@@ -27,16 +27,16 @@ createCase y x =
         visibility = False
     }
 
-createCaseList: Int -> List (List Case)
-createCaseList y =
-    if (y == 0) then
+createCaseList: Int -> Int -> List (List Case)
+createCaseList maxY maxX =
+    if (maxY == 0) then
         []
     else
-    (createCaseList (y-1)) ++ [(createCaseListHelpers (y-1) 0 10)]
+    (createCaseList (maxY-1) maxX) ++ [(createCaseListHelpers (maxY-1) 0 maxX)]
 
 createCaseListHelpers: Int -> Int -> Int -> List Case
 createCaseListHelpers y x maxValue =
-    if (x == 10) then
+    if (x == maxValue) then
         []
     else
         [(createCase y x)] ++ (createCaseListHelpers y (x+1) maxValue)
