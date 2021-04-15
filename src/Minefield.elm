@@ -3,6 +3,7 @@ import Types exposing(..)
 import Mine exposing (..)
 import Case exposing (..)
 import Array exposing (Array)
+import Array2D exposing(Array2D)
 
 options : Options
 options = { 
@@ -18,7 +19,7 @@ mine_field : Cmd Msg
 mine_field = Mine.generateRandomMines
         options
         MinesGenerated
-
-init_battleField : List (List Case)
+ 
+init_battleField : Array2D Case
 init_battleField = 
-        [[(createCase 0 0)],[(createCase 0 0)]]
+        Array2D.fromList (createCaseList 10)
