@@ -7,7 +7,7 @@ import Types exposing (..)
 import Minefield exposing(..)
 
 type alias Model =
-    {battle_field : List Int}
+    {battle_field : List (List Case)}
 
 init : ( Model, Cmd Msg )
 init =

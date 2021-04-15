@@ -1,4 +1,4 @@
-module Case exposing (getValue, getcoordinate,isMine)
+module Case exposing (..)
 import Browser.Events exposing (..)
 import Types exposing (..)
 
@@ -14,3 +14,13 @@ getValue point =
 isMine :Case -> Bool
 isMine point =
     point.isMine
+
+createCase : Int -> Int -> Case
+createCase y x =
+    {
+        x=x,
+        y=y,
+        value = 0,
+        isMine = False,
+        visibility = False
+    }

@@ -1,6 +1,8 @@
 module Minefield exposing (..)
 import Types exposing(..)
 import Mine exposing (..)
+import Case exposing (..)
+import Array exposing (Array)
 
 options : Options
 options = { 
@@ -17,7 +19,6 @@ mine_field = Mine.generateRandomMines
         options
         MinesGenerated
 
-init_battleField : List number
+init_battleField : List (List Case)
 init_battleField = 
-    [0,1,2]
-
+        [[(createCase 0 0)],[(createCase 0 0)]]
