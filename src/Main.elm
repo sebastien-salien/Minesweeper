@@ -5,9 +5,8 @@ import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
-import Array2D exposing(Array2D)
 type alias Model =
-    {battle_field :Array2D Case}
+    {battle_field :List Case}
 
 init : ( Model, Cmd Msg )
 init =
@@ -26,6 +25,7 @@ view model =
         , h1 [] [ text "Your Elm App is working!" ]
         , text "Implémentez le démineur !"
         ]
+
 
 main : Program () Model Msg
 main =

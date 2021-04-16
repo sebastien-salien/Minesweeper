@@ -2,8 +2,6 @@ module Minefield exposing (..)
 import Types exposing(..)
 import Mine exposing (..)
 import Case exposing (..)
-import Array exposing (Array)
-import Array2D exposing(Array2D)
 
 options : Options
 options = { 
@@ -20,6 +18,6 @@ mine_field = Mine.generateRandomMines
         options
         MinesGenerated
  
-init_battleField : Array2D Case
+init_battleField : List Case
 init_battleField = 
-        Array2D.fromList (createCaseList options.height options.width)
+        createCaseList options.height options.width

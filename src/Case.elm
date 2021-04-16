@@ -17,26 +17,26 @@ isMine :Case -> Bool
 isMine point =
     point.isMine
 
-createCase : Int -> Int -> Case
-createCase y x =
+createCase : Int -> Int -> Bool -> Case
+createCase y x mine=
     {
         x=x,
         y=y,
         value = 0,
-        isMine = False,
+        isMine = mine,
         visibility = False
     }
 
-createCaseList: Int -> Int -> List (List Case)
+createCaseList: Int -> Int ->List Case
 createCaseList maxY maxX =
     if (maxY == 0) then
         []
     else
-    (createCaseList (maxY-1) maxX) ++ [(createCaseListHelpers (maxY-1) 0 maxX)]
+    (createCaseList (maxY-1) maxX) ++ (createCaseListHelpers (maxY-1) 0 maxX)
 
 createCaseListHelpers: Int -> Int -> Int -> List Case
 createCaseListHelpers y x maxValue =
     if (x == maxValue) then
         []
     else
-        [(createCase y x)] ++ (createCaseListHelpers y (x+1) maxValue)
+        [(createCase y x False)] ++ (createCaseListHelpers y (x+1) maxValue)
