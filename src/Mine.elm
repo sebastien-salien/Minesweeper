@@ -3,7 +3,6 @@ module Mine exposing (Mine, Options, generateRandomMines)
 import Random exposing (Generator)
 import Set
 
-
 type alias Mine =
     ( Int, Int )
 
@@ -33,7 +32,6 @@ relaunch ({ minMines, initialY, initialX } as options) l =
 
     else
         randomMinesGenerator options
-
 
 randomMinesGenerator : Options -> Generator (List Mine)
 randomMinesGenerator ({ width, height, minMines, maxMines } as options) =
