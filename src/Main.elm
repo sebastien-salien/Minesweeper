@@ -5,7 +5,6 @@ import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
-import Case
 
 init : ( Model, Cmd Msg )
 init =
@@ -17,6 +16,10 @@ update msg model =
     case msg of
         MinesGenerated arg0 ->
             ({model | mines = arg0, battle_field = (setBattlefield model.battle_field arg0)}, Cmd.none)
+        SelectArea argY ->
+                (model, Cmd.none)
+
+
 
 view : Model -> Html Msg
 view model =

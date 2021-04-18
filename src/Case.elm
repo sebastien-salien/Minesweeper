@@ -20,8 +20,8 @@ isMine point =
 createCase : Int -> Int -> Bool -> Case
 createCase y x mine=
     {
-        x=x,
-        y=y,
+        x = x,
+        y = y,
         value = 0,
         isMine = mine,
         visibility = False
