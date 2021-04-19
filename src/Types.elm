@@ -1,7 +1,7 @@
 module Types exposing (..)
 
 type Msg
-    = MinesGenerated (List ( Int, Int )) | SelectArea Int
+    = MinesGenerated (List ( Int, Int )) | SelectArea Int Int
 type alias Model =
     {battle_field :List Case, mines : List (Int,Int)}
     
