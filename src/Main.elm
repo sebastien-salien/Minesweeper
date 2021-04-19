@@ -5,7 +5,7 @@ import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
-import Html.Attributes exposing (style, class)
+import Html.Attributes exposing (style, class, attribute)
 import Html.Events exposing (onClick)
 import Html exposing (button)
 import Html exposing (b)
@@ -64,7 +64,7 @@ viewDiv2 model n cases =
         [] -> []
 
         hd :: tm -> viewDiv2 model (n-1) tm ++ 
-            [button [onClick(SelectArea hd.x hd.y), class "case"]
+            [button [onClick(SelectArea hd.x hd.y), class "case", attribute "valeur" "x"]
             [
             if hd.visibility == True then
                 if hd.isMine then
