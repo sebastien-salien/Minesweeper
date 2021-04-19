@@ -5,8 +5,7 @@ import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
-import Case
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (style, class)
 import Html.Events exposing (onClick)
 import Html exposing (button)
 import Html exposing (b)
@@ -64,19 +63,18 @@ viewDiv2 model n cases =
     case cases of
         [] -> []
 
-        hd :: tm -> viewDiv2 model (n-1) tm ++ [button
-                        [onClick(SelectArea hd.x hd.y),style "width" "50px", style "height" "50px"]
-                        [
-                        if hd.visibility == True then
-                         if hd.isMine then
-                              text "💣"
+        hd :: tm -> viewDiv2 model (n-1) tm ++ 
+            [button [onClick(SelectArea hd.x hd.y), class "case"]
+            [
+            if hd.visibility == True then
+                if hd.isMine then
+                    text "💣"
+                else
+                text (String.fromInt (1))
 
-                         else
-                         text (String.fromInt (1))
-
-                         else
-                            text ""
-                        ]]
+                else
+                text ""
+            ]]
 
 
 --onClick((SelectArea ht.x ht.y)),
