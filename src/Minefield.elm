@@ -36,7 +36,7 @@ initBattleFieldMines battle_field y x =
                 [] -> battle_field
                 hd_b::tl_b ->
                         if x == hd_b.x && y == hd_b.y then
-                                {hd_b | value = hd_b.value, isMine = True} :: tl_b
+                                {hd_b | value = hd_b.value, isMine = True} :: (initBattleFieldMines tl_b y x)
                         else
                                 if 
                                         ((hd_b.x + 1) == x && hd_b.y == y) ||
@@ -51,3 +51,4 @@ initBattleFieldMines battle_field y x =
                                         {hd_b | value = 1, isMine = hd_b.isMine } :: (initBattleFieldMines tl_b y x)
                                 else
                                         hd_b :: (initBattleFieldMines tl_b y x)
+

@@ -21,8 +21,8 @@ randomMinesGeneratorList : Options -> Int -> Generator (List Mine)
 randomMinesGeneratorList { width, height } len =
     Random.list len <|
         Random.pair
-            (Random.int 0 width)
-            (Random.int 0 height)
+            (Random.int 0 (width-1))
+            (Random.int 0 (height-1))
 
 
 relaunch : Options -> List Mine -> Generator (List Mine)

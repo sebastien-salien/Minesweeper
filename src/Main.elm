@@ -9,6 +9,7 @@ import Html.Attributes exposing (style, class, attribute)
 import Html.Events exposing (onClick)
 import Html exposing (button)
 import Html exposing (b)
+import List.Extra
 
 init : ( Model, Cmd Msg )
 init =
@@ -62,19 +63,17 @@ viewDiv2 :  Model -> Int -> List Case -> List (Html Msg)
 viewDiv2 model n cases =
     case cases of
         [] -> []
-
-        hd :: tm -> viewDiv2 model (n-1) tm ++ 
-            [button [onClick(SelectArea hd.x hd.y), class "case", attribute "valeur" "x"]
+        hd :: tm -> 
+            List.append [button [onClick(SelectArea hd.x hd.y), class "case", attribute "y" (String.fromInt hd.y), attribute "x" (String.fromInt hd.x)]
             [
             if hd.visibility == True then
-                if hd.isMine then
-                    text "💣"
+                    if hd.isMine then
+                        text "💣"
+                    else
+                        text (String.fromInt (hd.value))
                 else
-                text (String.fromInt (1))
-
-                else
-                text ""
-            ]]
+                    text ""
+            ]] (viewDiv2 model (n-1) tm )
 
 
 --onClick((SelectArea ht.x ht.y)),
@@ -96,16 +95,50 @@ viewDiv2 model n cases =
 --             text ""
 --         ]
 
+-- viewVisibility : List Case -> Int -> Int -> List Case
+-- viewVisibility cases x y = 
+--     case cases of
+--         [] -> []
+--         th :: tm ->  
+--             if x== th.x && y == th.y then
+--                 ({ th | visibility = True } :: tm)
+--             else
+--                 th :: (viewVisibility tm x y)
+
+
+
+isCase : Int -> Int -> Case -> Bool
+isCase x y el = 
+  el.x == x && el.y == y
+
 viewVisibility : List Case -> Int -> Int -> List Case
 viewVisibility cases x y = 
-    case cases of
-        [] -> []
-
-        th :: tm ->  if x== th.x && y == th.y then
-                                ({ th | visibility = True } :: tm)
-                    else 
-                      th :: viewVisibility tm x y 
-
+  let case_ = List.Extra.find (isCase x y) cases in
+  case case_ of
+    Nothing -> cases
+    Just myCase ->
+      if myCase.visibility then
+        cases
+      else
+        let
+            newBord : List Case
+            newBord = (List.Extra.updateIf (isCase x y) (\c -> { c | visibility = True }) cases)
+        in
+        if myCase.value > 0 || myCase.isMine then
+            newBord
+        else 
+            List.foldl 
+            (\(x_, y_) acc -> viewVisibility acc x_ y_)
+            newBord
+            [ (x, y - 1)
+            , (x, y + 1)
+            , (x + 1, y)
+            , (x - 1, y)
+            , (x - 1, y + 1)
+            , (x - 1, y - 1)
+            , (x + 1, y + 1)
+            , (x + 1, y - 1)
+            ]
 
 viewUpdate : Model ->  Int ->  Int -> Model
 viewUpdate model x y =
