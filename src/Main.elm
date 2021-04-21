@@ -6,11 +6,11 @@ import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
 import Html.Attributes exposing (style, class, attribute)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick,on)
 import Html exposing (button)
 import Html exposing (b)
 import List.Extra
-
+import Html exposing (Attribute)
 init : ( Model, Cmd Msg )
 init =
     ( {battle_field = init_battleField, mines = []}, mine_field)
@@ -30,7 +30,7 @@ view model =
         [ img [ src "/logo.svg" ] []
         , h1 [] [ text "Your Elm App is working!" ]
         , text "Implémentez le démineur !"
-        ,div [ style "display" "grid", style "grid-template-columns" "repeat(10, 50px)" ]
+        ,div [ class "battle_field"]
             (viewDiv2 model 99 model.battle_field)
         ]
 
@@ -44,19 +44,6 @@ main =
         , subscriptions = always Sub.none
         }
 
-
--- viewDiv : Model -> Int -> List Case -> List (Html Msg)
--- viewDiv model n cases =
---     let
---         h = List.head cases
---         drop = List.drop n cases
---     in
-    
---     if n == 0 
---         then 
---              [button[onClick(SelectArea h.x h.y),style "width" "50px", style "height" "50px"][]]
---         else 
---             viewDiv model (n-1) drop ++ [button[onClick(SelectArea h.x h.y),style "width" "50px", style "height" "50px"][]]
             
 
 viewDiv2 :  Model -> Int -> List Case -> List (Html Msg)
@@ -64,48 +51,40 @@ viewDiv2 model n cases =
     case cases of
         [] -> []
         hd :: tm -> 
-            List.append [button [onClick(SelectArea hd.x hd.y), class "case", attribute "y" (String.fromInt hd.y), attribute "x" (String.fromInt hd.x)]
+            List.append [button [onClick (SelectArea hd.x hd.y), 
+            setCaseStyle hd          
+            , attribute "y" (String.fromInt hd.y), attribute "x" (String.fromInt hd.x)]
             [
             if hd.visibility == True then
                     if hd.isMine then
                         text "💣"
                     else
-                        text (String.fromInt (hd.value))
+                        text (
+                            if hd.value /= 0 then
+                                String.fromInt (hd.value)
+                            else
+                                ""
+                            )
                 else
                     text ""
             ]] (viewDiv2 model (n-1) tm )
 
 
---onClick((SelectArea ht.x ht.y)),
-
-
-
--- viewCell : List Cell -> Cell -> Html Msg
--- viewCell cells cell =
---     button
---         [ onClick (Reveal cell.id), style "width" "50px", style "height" "50px" ]
---         [ if cell.revealed then
---             if cell.isMine then
---                 text "💣"
-
---             else
---                 text (String.fromInt (numberOfBombsAround cells cell.id))
-
---           else
---             text ""
---         ]
-
--- viewVisibility : List Case -> Int -> Int -> List Case
--- viewVisibility cases x y = 
---     case cases of
---         [] -> []
---         th :: tm ->  
---             if x== th.x && y == th.y then
---                 ({ th | visibility = True } :: tm)
---             else
---                 th :: (viewVisibility tm x y)
-
-
+setCaseStyle : Case -> Attribute Msg
+setCaseStyle case_ =
+    class ("case "
+    ++ if case_.visibility && case_.isMine == False then
+        if case_.value == 0 then "empty " else ""
+        ++ if case_.value == 1 then "res-1 " else ""
+        ++ if case_.value == 2 then "res-2 " else ""
+        ++ if case_.value == 3 then "res-3 " else ""
+        ++ if case_.value == 4 then "res-4 " else ""
+        ++ if case_.value == 5 then "res-5 " else ""
+        ++ if case_.value == 6 then "res-6 " else ""
+        ++ if case_.value == 7 then "res-7 " else ""
+        ++ if case_.value == 8 then "res-8 " else ""
+    else ""
+    )
 
 isCase : Int -> Int -> Case -> Bool
 isCase x y el = 

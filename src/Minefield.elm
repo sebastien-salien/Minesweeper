@@ -7,8 +7,8 @@ options : Options
 options = { 
         width = 10,
         height = 10,
-        minMines = 1,
-        maxMines = 1,
+        minMines = 10,
+        maxMines = 10,
         initialX = 0,
         initialY = 0
         }
@@ -48,7 +48,7 @@ initBattleFieldMines battle_field y x =
                                         ((hd_b.x - 1) == x && (hd_b.y + 1) == y) ||
                                         ((hd_b.x - 1) == x && (hd_b.y - 1) == y)
                                         then
-                                        {hd_b | value = 1, isMine = hd_b.isMine } :: (initBattleFieldMines tl_b y x)
+                                        {hd_b | value = hd_b.value + 1, isMine = hd_b.isMine } :: (initBattleFieldMines tl_b y x)
                                 else
                                         hd_b :: (initBattleFieldMines tl_b y x)
 

@@ -29,3 +29,40 @@ img {
   height: 50px;
   width: 50px;
 }
+
+.battle_field {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  width: min-content;
+  margin: auto;
+}
+
+.empty {
+  background-color: #F9F9F9;
+}
+.res-1{
+  background-color:blue;
+}
+.res-2{
+  background-color:green;
+}
+.res-3{
+  background-color: red;
+}
+.res-4{
+  background-color:purple;
+}
+.res-5{
+  background-color:darkred;
+}
+.res-6{
+  background-color:darkslategray;
+}
+.res-7{
+  background-color: rgb(0, 0, 0);
+}
+.res-8{
+  background-color: grey;
+
+}
+
