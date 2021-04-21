@@ -11,6 +11,9 @@ import Html exposing (button)
 import Html exposing (b)
 import List.Extra
 import Html exposing (Attribute)
+import Html.Events.Extra.Mouse as Mouse
+import Platform.Cmd exposing (none)
+
 init : ( Model, Cmd Msg )
 init =
     ( {battle_field = init_battleField, mines = []}, mine_field)
@@ -21,8 +24,12 @@ update msg model =
     case msg of
         MinesGenerated arg0 ->
             ({model | mines = arg0, battle_field = (setBattlefield model.battle_field arg0)}, Cmd.none)
-        SelectArea argX argY ->
-            ((viewUpdate model argX argY), Cmd.none)
+        OpenCase argX argY ->
+            ((viewUpdateVisibility model argX argY), Cmd.none)
+        SetFlag argX argY ->
+            ((viewUpdateFlag model argX argY), Cmd.none)
+        Default ->
+            (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =
@@ -51,7 +58,7 @@ viewDiv2 model n cases =
     case cases of
         [] -> []
         hd :: tm -> 
-            List.append [button [onClick (SelectArea hd.x hd.y), 
+            List.append [button [Mouse.onDown (\event -> cutomClick event hd), 
             setCaseStyle hd          
             , attribute "y" (String.fromInt hd.y), attribute "x" (String.fromInt hd.x)]
             [
@@ -66,9 +73,21 @@ viewDiv2 model n cases =
                                 ""
                             )
                 else
-                    text ""
+                    if hd.flagRaised == True then 
+                        text "🚩"
+                    else
+                        text ""
             ]] (viewDiv2 model (n-1) tm )
 
+cutomClick : Mouse.Event -> Case -> Msg
+cutomClick mouseEvent hd =
+    case mouseEvent.button of
+        Mouse.MainButton ->
+            (OpenCase hd.x hd.y)
+        Mouse.SecondButton ->
+            (SetFlag hd.x hd.y)
+        _ ->
+            Default
 
 setCaseStyle : Case -> Attribute Msg
 setCaseStyle case_ =
@@ -90,8 +109,8 @@ isCase : Int -> Int -> Case -> Bool
 isCase x y el = 
   el.x == x && el.y == y
 
-viewVisibility : List Case -> Int -> Int -> List Case
-viewVisibility cases x y = 
+viewUpdateVisibility_ : List Case -> Int -> Int -> List Case
+viewUpdateVisibility_ cases x y = 
   let case_ = List.Extra.find (isCase x y) cases in
   case case_ of
     Nothing -> cases
@@ -107,7 +126,7 @@ viewVisibility cases x y =
             newBord
         else 
             List.foldl 
-            (\(x_, y_) acc -> viewVisibility acc x_ y_)
+            (\(x_, y_) acc -> viewUpdateVisibility_ acc x_ y_)
             newBord
             [ (x, y - 1)
             , (x, y + 1)
@@ -119,6 +138,17 @@ viewVisibility cases x y =
             , (x + 1, y - 1)
             ]
 
-viewUpdate : Model ->  Int ->  Int -> Model
-viewUpdate model x y =
-    {model | battle_field = viewVisibility model.battle_field x y}
+viewUpdateFlag_ : List Case -> Int -> Int -> List Case
+viewUpdateFlag_ cases x y = 
+    List.Extra.updateIf (isCase x y) (\c -> { c | flagRaised = True }) cases
+
+
+
+viewUpdateVisibility : Model ->  Int ->  Int -> Model
+viewUpdateVisibility model x y =
+    {model | battle_field = viewUpdateVisibility_ model.battle_field x y}
+
+viewUpdateFlag : Model ->  Int ->  Int -> Model
+viewUpdateFlag model x y =
+    {model | battle_field = viewUpdateFlag_ model.battle_field x y}
+

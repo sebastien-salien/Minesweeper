@@ -23,6 +23,7 @@ createCase y x mine=
         x = x,
         y = y,
         value = 0,
+        flagRaised = False,
         isMine = mine,
         visibility = False
     }
