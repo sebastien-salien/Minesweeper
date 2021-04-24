@@ -30,6 +30,7 @@ img {
   width: 50px;
 }
 
+
 .battle_field {
   display: grid;
   grid-template-columns: repeat(10, 50px);

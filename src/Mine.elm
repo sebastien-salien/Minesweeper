@@ -24,7 +24,6 @@ randomMinesGeneratorList { width, height } len =
             (Random.int 0 (width-1))
             (Random.int 0 (height-1))
 
-
 relaunch : Options -> List Mine -> Generator (List Mine)
 relaunch ({ minMines, initialY, initialX } as options) l =
     if List.length l >= minMines && not (List.member ( initialX, initialY ) l) then

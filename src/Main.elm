@@ -12,18 +12,17 @@ import Html exposing (b)
 import List.Extra
 import Html exposing (Attribute)
 import Html.Events.Extra.Mouse as Mouse
-import Platform.Cmd exposing (none)
-
+import Case exposing (..)
 init : ( Model, Cmd Msg )
 init =
-    ( {battle_field = init_battleField, mines = []}, mine_field)
+    ( {battle_field = init_battleField, mines = [], cptFlag =0}, mine_field)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         MinesGenerated arg0 ->
-            ({model | mines = arg0, battle_field = (setBattlefield model.battle_field arg0)}, Cmd.none)
+            ({model | mines = arg0, battle_field = (setBattlefield model.battle_field arg0), cptFlag = (List.length arg0)}, Cmd.none)
         OpenCase argX argY ->
             ((viewUpdateVisibility model argX argY), Cmd.none)
         SetFlag argX argY ->
@@ -58,7 +57,7 @@ viewDiv2 model n cases =
     case cases of
         [] -> []
         hd :: tm -> 
-            List.append [button [Mouse.onDown (\event -> cutomClick event hd), 
+            List.append [button [Mouse.onContextMenu (\event -> cutomClick event hd),Mouse.onClick (\event -> cutomClick event hd) , 
             setCaseStyle hd          
             , attribute "y" (String.fromInt hd.y), attribute "x" (String.fromInt hd.x)]
             [
@@ -73,7 +72,7 @@ viewDiv2 model n cases =
                                 ""
                             )
                 else
-                    if hd.flagRaised == True then 
+                    if hd.flagRaised == True then
                         text "🚩"
                     else
                         text ""
@@ -105,10 +104,6 @@ setCaseStyle case_ =
     else ""
     )
 
-isCase : Int -> Int -> Case -> Bool
-isCase x y el = 
-  el.x == x && el.y == y
-
 viewUpdateVisibility_ : List Case -> Int -> Int -> List Case
 viewUpdateVisibility_ cases x y = 
   let case_ = List.Extra.find (isCase x y) cases in
@@ -120,7 +115,7 @@ viewUpdateVisibility_ cases x y =
       else
         let
             newBord : List Case
-            newBord = (List.Extra.updateIf (isCase x y) (\c -> { c | visibility = True }) cases)
+            newBord = (List.Extra.updateIf (isCaseWithoutFlag x y) (\c -> { c | visibility = True } ) cases)
         in
         if myCase.value > 0 || myCase.isMine then
             newBord
@@ -139,10 +134,21 @@ viewUpdateVisibility_ cases x y =
             ]
 
 viewUpdateFlag_ : List Case -> Int -> Int -> List Case
-viewUpdateFlag_ cases x y = 
-    List.Extra.updateIf (isCase x y) (\c -> { c | flagRaised = True }) cases
+viewUpdateFlag_ cases x y =
+    List.Extra.updateIf (isCase x y) (\c -> { c | flagRaised = (c.flagRaised == False) }) cases
 
-
+viewUpdateCptFlag_ :  List Case -> Int-> Int-> Int -> Int
+viewUpdateCptFlag_ battle_field x y cptFlag =
+    case battle_field of
+        [] -> cptFlag
+        hd::tl ->
+            if (isCase x y hd) then
+                if (hd.flagRaised) then
+                    cptFlag + 1
+                else
+                    cptFlag - 1
+            else
+                viewUpdateCptFlag_ tl x y cptFlag
 
 viewUpdateVisibility : Model ->  Int ->  Int -> Model
 viewUpdateVisibility model x y =
@@ -150,5 +156,8 @@ viewUpdateVisibility model x y =
 
 viewUpdateFlag : Model ->  Int ->  Int -> Model
 viewUpdateFlag model x y =
-    {model | battle_field = viewUpdateFlag_ model.battle_field x y}
+    if (model.cptFlag == 0 ) then 
+        model
+    else
+        {model | battle_field = viewUpdateFlag_ model.battle_field x y, cptFlag = viewUpdateCptFlag_ model.battle_field x y model.cptFlag}
 

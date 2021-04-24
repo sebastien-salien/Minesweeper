@@ -41,3 +41,11 @@ createCaseListHelpers y x maxValue =
         []
     else
         [(createCase y x False)] ++ (createCaseListHelpers y (x+1) maxValue)
+
+isCase : Int -> Int -> Case -> Bool
+isCase x y el = 
+  el.x == x && el.y == y
+
+isCaseWithoutFlag : Int -> Int -> Case -> Bool
+isCaseWithoutFlag x y el = 
+  el.x == x && el.y == y && el.flagRaised == False
