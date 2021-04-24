@@ -33,7 +33,7 @@ createCaseList maxY maxX =
     if (maxY == 0) then
         []
     else
-    (createCaseList (maxY-1) maxX) ++ (createCaseListHelpers (maxY-1) 0 maxX)
+        (createCaseList (maxY-1) maxX) ++ (createCaseListHelpers (maxY-1) 0 maxX)
 
 createCaseListHelpers: Int -> Int -> Int -> List Case
 createCaseListHelpers y x maxValue =
@@ -49,3 +49,13 @@ isCase x y el =
 isCaseWithoutFlag : Int -> Int -> Case -> Bool
 isCaseWithoutFlag x y el = 
   el.x == x && el.y == y && el.flagRaised == False
+
+isCaseContainsMine : List Case -> Int -> Int -> Bool
+isCaseContainsMine cases x y =
+    case cases of
+        [] -> False
+        hd::tl ->
+            if (isCase x y hd) then 
+                hd.isMine == False
+            else
+                isCaseContainsMine tl x y

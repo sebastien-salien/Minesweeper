@@ -15,7 +15,7 @@ import Html.Events.Extra.Mouse as Mouse
 import Case exposing (..)
 init : ( Model, Cmd Msg )
 init =
-    ( {battle_field = init_battleField, mines = [], cptFlag =0}, mine_field)
+    ( {battle_field = init_battleField, mines = [], cptFlag =0, canPlay = True}, mine_field)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -152,7 +152,10 @@ viewUpdateCptFlag_ battle_field x y cptFlag =
 
 viewUpdateVisibility : Model ->  Int ->  Int -> Model
 viewUpdateVisibility model x y =
-    {model | battle_field = viewUpdateVisibility_ model.battle_field x y}
+    if model.canPlay then
+        {model | battle_field = viewUpdateVisibility_ model.battle_field x y, canPlay = isCaseContainsMine model.battle_field x y}
+    else
+        model
 
 viewUpdateFlag : Model ->  Int ->  Int -> Model
 viewUpdateFlag model x y =
