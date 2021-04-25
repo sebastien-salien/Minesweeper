@@ -75,7 +75,7 @@ update msg model =
         IncrementMinMines ->
             let
                 updateCustomOptions: Options
-                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = if (model.customOptions.minMines <= model.customOptions.maxMines) then model.customOptions.minMines + 1 else model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = if (model.customOptions.minMines < model.customOptions.maxMines) then model.customOptions.minMines + 1 else model.customOptions.minMines, maxMines = model.customOptions.maxMines}
             in
             ({model | customOptions = updateCustomOptions}, Cmd.none)
         DecrementMinMines ->
@@ -87,13 +87,13 @@ update msg model =
         IncrementMaxMines ->
             let
                 updateCustomOptions: Options
-                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.maxMines, maxMines = if (model.customOptions.maxMines < model.customOptions.width * model.customOptions.height) then model.customOptions.height +1 else model.customOptions.maxMines}
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = if (model.customOptions.maxMines < (model.customOptions.width * model.customOptions.height)) then model.customOptions.maxMines +1 else model.customOptions.maxMines}
             in
             ({model | customOptions = updateCustomOptions}, Cmd.none)
         DecrementMaxMines ->
             let
                 updateCustomOptions: Options
-                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = if (model.customOptions.maxMines - 1 > model.customOptions.minMines) then model.customOptions.maxMines - 1 else model.customOptions.maxMines}
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = if (model.customOptions.maxMines - 1 >= model.customOptions.minMines) then model.customOptions.maxMines - 1 else model.customOptions.maxMines}
             in
             ({model | customOptions = updateCustomOptions}, Cmd.none)
         Default ->
