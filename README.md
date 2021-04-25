@@ -34,7 +34,7 @@ Lors du clic sur une case, celle-ci peut être vide, avoir un numéro, ou une bo
 
 Si la case est vide, alors il faut la révéler et révéler toutes les cases connectées aux alentours.
 Si la case contient un numéro, alors il faut la révéler.
-Si la case contient une bombe, alors il faut arrêter le jeu et révéler tout le plateau.
+Si la case contient une bombe, alors il faut arrêter le jeu.
 
 Le numéro dans les cases numérotés correspond aux nombres de bombes adjacentes dans toutes les directions.
 
