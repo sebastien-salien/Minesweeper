@@ -44,7 +44,7 @@ createCaseListHelpers y x maxValue =
 
 isCase : Int -> Int -> Case -> Bool
 isCase x y el = 
-  el.x == x && el.y == y
+  el.x == x && el.y == y && el.visibility == False
 
 isCaseWithoutFlag : Int -> Int -> Case -> Bool
 isCaseWithoutFlag x y el = 

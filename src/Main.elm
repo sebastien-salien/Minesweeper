@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, div, h1, img, text)
+import Html exposing (Html, div, h1,h2, span, text)
 import Html.Attributes exposing (src)
 import Types exposing (..)
 import Minefield exposing(..)
@@ -13,13 +13,30 @@ import List.Extra
 import Html exposing (Attribute)
 import Html.Events.Extra.Mouse as Mouse
 import Case exposing (..)
+import Types exposing (Msg(..))
 init : ( Model, Cmd Msg )
 init =
-    ( {battle_field = init_battleField, mines = [], cptFlag =0, canPlay = True}, mine_field)
+    let
+        defaultOption : Options
+        defaultOption = { 
+                width = 10,
+                height = 10,
+                minMines = 10,
+                maxMines = 10
+            }
+    in
+    
+    ( {battle_field = init_battleField defaultOption
+        , mines = []
+        , cptFlag =0
+        , canPlay = True
+        , options = defaultOption
+        , customOptions = defaultOption
+        }, mine_field defaultOption)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update msg model =    
     case msg of
         MinesGenerated arg0 ->
             ({model | mines = arg0, battle_field = (setBattlefield model.battle_field arg0), cptFlag = (List.length arg0)}, Cmd.none)
@@ -27,17 +44,96 @@ update msg model =
             ((viewUpdateVisibility model argX argY), Cmd.none)
         SetFlag argX argY ->
             ((viewUpdateFlag model argX argY), Cmd.none)
+        DefaultReset -> 
+            ( {battle_field = init_battleField model.customOptions, mines = [], cptFlag =0, canPlay = True, options = model.customOptions, customOptions = model.customOptions}, mine_field model.customOptions)
+        CustomReset -> 
+            ( {battle_field = init_battleField model.customOptions, mines = [], cptFlag =0, canPlay = True, options = model.customOptions, customOptions = model.customOptions}, mine_field model.customOptions)
+        IncrementWidth ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width +1, height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        DecrementWidth ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = if (model.customOptions.width > 0)  then model.customOptions.width - 1 else 0, height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        IncrementHeight ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width, height = model.customOptions.height + 1, minMines = model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        DecrementHeight ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width, height = if (model.customOptions.height - 1 > 0) then model.customOptions.height - 1 else 0, minMines = model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        IncrementMinMines ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = if (model.customOptions.minMines <= model.customOptions.maxMines) then model.customOptions.minMines + 1 else model.customOptions.minMines, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        DecrementMinMines ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = if (model.customOptions.minMines > 0) then model.customOptions.minMines - 1 else 0, maxMines = model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        IncrementMaxMines ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.maxMines, maxMines = if (model.customOptions.maxMines < model.customOptions.width * model.customOptions.height) then model.customOptions.height +1 else model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
+        DecrementMaxMines ->
+            let
+                updateCustomOptions: Options
+                updateCustomOptions = { width = model.customOptions.width , height = model.customOptions.height, minMines = model.customOptions.minMines, maxMines = if (model.customOptions.maxMines - 1 > model.customOptions.minMines) then model.customOptions.maxMines - 1 else model.customOptions.maxMines}
+            in
+            ({model | customOptions = updateCustomOptions}, Cmd.none)
         Default ->
             (model, Cmd.none)
 
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        , text "Implémentez le démineur !"
-        ,div [ class "battle_field"]
+        [ h1 [] [ text "Minesweeper" ]
+        , h2 [] [text (if (model.canPlay) then "" else "You lost !")]
+        , span [] [text ("flag available : " ++ (String.fromInt model.cptFlag))]
+        , button [Mouse.onClick (\event -> DefaultReset ), class "reset" ] [ text "reset" ]
+        , div [ class "battle_field", style "grid-template-columns" ("repeat(" ++ String.fromInt model.options.width ++", 50px)")]
             (viewDiv2 model 99 model.battle_field)
+        , h2 [] [text "Custom Reset"]
+        , div [class "set_custom_options"] [
+          span [] [text "Custom Height :  "]
+        , div [class "custom_options"]
+            [ button [ onClick DecrementHeight ] [ text "-" ]
+            , div [class "custom_value"] [ text (String.fromInt model.customOptions.height) ]
+            , button [ onClick IncrementHeight ] [ text "+" ]] ]
+        , div [class "set_custom_options"] [
+          span [] [text "Custom Width :  "]
+        , div [class "custom_options"]
+            [ button [ onClick DecrementWidth ] [ text "-" ]
+            , div [class "custom_value"] [ text (String.fromInt model.customOptions.width) ]
+            , button [ onClick IncrementWidth ] [ text "+" ]] ]
+        , div [class "set_custom_options"] [
+          span [] [text "Custom MinMines :  "]
+        , div [class "custom_options"]
+            [ button [ onClick DecrementMinMines ] [ text "-" ]
+            , div [class "custom_value"] [ text (String.fromInt model.customOptions.minMines) ]
+            , button [ onClick IncrementMinMines ] [ text "+" ]] ]
+        , div [class "set_custom_options"] [
+          span [] [text "Custom MaxMines :  "]
+        , div [class "custom_options"]
+            [ button [ onClick DecrementMaxMines ] [ text "-" ]
+            , div [class "custom_value"] [ text (String.fromInt model.customOptions.maxMines) ]
+            , button [ onClick IncrementMaxMines ] [ text "+" ]] ]
+        , button [Mouse.onClick (\event -> CustomReset ), class "custom_reset" ] [ text "Apply Custom Reset" ]
         ]
 
 
@@ -50,7 +146,6 @@ main =
         , subscriptions = always Sub.none
         }
 
-            
 
 viewDiv2 :  Model -> Int -> List Case -> List (Html Msg)
 viewDiv2 model n cases =

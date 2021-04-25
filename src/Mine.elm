@@ -1,20 +1,11 @@
-module Mine exposing (Mine, Options, generateRandomMines)
+module Mine exposing (Mine, generateRandomMines)
 
 import Random exposing (Generator)
 import Set
+import Types exposing (..)
 
 type alias Mine =
     ( Int, Int )
-
-
-type alias Options =
-    { width : Int
-    , height : Int
-    , minMines : Int
-    , maxMines : Int
-    , initialX : Int
-    , initialY : Int
-    }
 
 
 randomMinesGeneratorList : Options -> Int -> Generator (List Mine)
@@ -25,8 +16,8 @@ randomMinesGeneratorList { width, height } len =
             (Random.int 0 (height-1))
 
 relaunch : Options -> List Mine -> Generator (List Mine)
-relaunch ({ minMines, initialY, initialX } as options) l =
-    if List.length l >= minMines && not (List.member ( initialX, initialY ) l) then
+relaunch ({ minMines } as options) l =
+    if List.length l >= minMines && not (List.member ( 0, 0 ) l) then
         Random.constant l
 
     else

@@ -28,14 +28,37 @@ img {
 .case {
   height: 50px;
   width: 50px;
+  background-color: rgb(177, 177, 177);
+}
+
+.reset{
+  margin-left: 323px;
+}
+
+.custom_reset {
+  margin-top: 12px;
 }
 
 
 .battle_field {
   display: grid;
-  grid-template-columns: repeat(10, 50px);
   width: min-content;
   margin: auto;
+  margin-top: 8px;
+}
+
+.custom_options {
+  display: inline-flex;
+}
+.custom_options > .custom_value {
+  width: 35px;
+}
+.set_custom_options {
+  margin-top: 4px;
+}
+.set_custom_options > span {
+  display: inline-block;
+    width: 150px;
 }
 
 .empty {

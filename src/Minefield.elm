@@ -3,23 +3,13 @@ import Types exposing(..)
 import Mine exposing (..)
 import Case exposing (..)
 
-options : Options
-options = { 
-        width = 10,
-        height = 10,
-        minMines = 10,
-        maxMines = 10,
-        initialX = 0,
-        initialY = 0
-        }
-
-mine_field : Cmd Msg
-mine_field = Mine.generateRandomMines
-        options
+mine_field : Options -> Cmd Msg
+mine_field defaultO= Mine.generateRandomMines
+        defaultO
         MinesGenerated
  
-init_battleField : List Case
-init_battleField = 
+init_battleField : Options -> List Case
+init_battleField options = 
         createCaseList options.height options.width
 
 setBattlefield : List Case -> List (Int,Int) -> List Case

@@ -1,9 +1,17 @@
 module Types exposing (..)
 
 type Msg
-    = MinesGenerated (List ( Int, Int )) | OpenCase Int Int | SetFlag Int Int| Default
+    = MinesGenerated (List ( Int, Int )) | OpenCase Int Int | SetFlag Int Int| DefaultReset | CustomReset | Default 
+        | IncrementWidth | DecrementWidth | IncrementHeight | DecrementHeight | IncrementMinMines | DecrementMinMines | IncrementMaxMines | DecrementMaxMines
+
+type alias Options =
+    { width : Int
+    , height : Int
+    , minMines : Int
+    , maxMines : Int
+    }
 type alias Model =
-    {battle_field :List Case, mines : List (Int,Int), cptFlag : Int, canPlay : Bool}
+    {battle_field :List Case, mines : List (Int,Int), cptFlag : Int, canPlay : Bool, options : Options, customOptions : Options}
     
 type alias Case =
     {   
