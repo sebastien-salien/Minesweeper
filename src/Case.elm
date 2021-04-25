@@ -59,3 +59,13 @@ isCaseContainsMine cases x y =
                 hd.isMine == False
             else
                 isCaseContainsMine tl x y
+
+isCaseContainsFlag : List Case -> Int -> Int -> Bool
+isCaseContainsFlag cases x y =
+        case cases of
+        [] -> False
+        hd::tl ->
+            if (isCase x y hd) then
+                hd.flagRaised
+            else
+                isCaseContainsFlag tl x y

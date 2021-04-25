@@ -104,7 +104,7 @@ view model =
     div []
         [ h1 [] [ text "Minesweeper" ]
         , h2 [] [text (if (model.canPlay) then "" else "You lost !")]
-        , span [] [text ("flag available : " ++ (String.fromInt model.cptFlag))]
+        , span [] [text ("Flags available : " ++ (String.fromInt model.cptFlag))]
         , button [Mouse.onClick (\event -> DefaultReset ), class "reset" ] [ text "reset" ]
         , div [ class "battle_field", style "grid-template-columns" ("repeat(" ++ String.fromInt model.options.width ++", 50px)")]
             (viewDiv2 model 99 model.battle_field)
@@ -235,7 +235,7 @@ viewUpdateFlag_ cases x y =
 viewUpdateCptFlag_ :  List Case -> Int-> Int-> Int -> Int
 viewUpdateCptFlag_ battle_field x y cptFlag =
     case battle_field of
-        [] -> cptFlag
+        [] -> 0
         hd::tl ->
             if (isCase x y hd) then
                 if (hd.flagRaised) then
@@ -254,8 +254,10 @@ viewUpdateVisibility model x y =
 
 viewUpdateFlag : Model ->  Int ->  Int -> Model
 viewUpdateFlag model x y =
-    if (model.cptFlag == 0 ) then 
-        model
+    if (model.cptFlag <= 0) then
+        if (isCaseContainsFlag model.battle_field x y) then
+            {model | battle_field = viewUpdateFlag_ model.battle_field x y, cptFlag = viewUpdateCptFlag_ model.battle_field x y model.cptFlag}
+        else
+            model
     else
         {model | battle_field = viewUpdateFlag_ model.battle_field x y, cptFlag = viewUpdateCptFlag_ model.battle_field x y model.cptFlag}
-
